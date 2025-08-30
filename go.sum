@@ -1,0 +1,4 @@
+gitee.com/dn-jinmin/claude v1.0.2 h1:/BqxeUtpVvuO33sHIp9s/inWE8wTmotWEn9knJqALEs=
+gitee.com/dn-jinmin/claude v1.0.2/go.mod h1:3cHFmKEE+ZXHOvQ0mgcny02i1wDuJvIOCwZqm8j5+Gg=
+github.com/sashabaranov/go-openai v1.41.1 h1:zf5tM+GuxpyiyD9XZg8nCqu52eYFQg9OOew0gnIuDy4=
+github.com/sashabaranov/go-openai v1.41.1/go.mod h1:lj5b/K+zjTSFxVLijLSTDZuP7adOgerWeFyZLUhAKRg=
