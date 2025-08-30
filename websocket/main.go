@@ -30,7 +30,7 @@ func server(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			break
 		}
-		s, err := gpt.Message(context.Background(), string(message))
+		s, err := gpt.RoleMessage(context.Background(), string(message))
 		if err != nil {
 			break
 		}

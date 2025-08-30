@@ -22,15 +22,15 @@ func NewChat() *Chat {
 	return &Chat{client: client}
 }
 
-func (c *Chat) Message(ctx context.Context, msg string) (string, error) {
+func (c *Chat) RoleMessage(ctx context.Context, prompts string) (string, error) {
 	rsp, err := c.client.CreateChatCompletion(
 		ctx,
 		openai.ChatCompletionRequest{
 			Model: openai.GPT3Dot5Turbo,
 			Messages: []openai.ChatCompletionMessage{
 				{
-					Role:    "user",
-					Content: msg,
+					Role:    openai.ChatMessageRoleSystem,
+					Content: prompts,
 				},
 			},
 		},
@@ -40,5 +40,4 @@ func (c *Chat) Message(ctx context.Context, msg string) (string, error) {
 		return "", err
 	}
 	return rsp.Choices[0].Message.Content, nil
-
 }
