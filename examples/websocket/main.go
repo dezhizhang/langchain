@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"net/http"
-	"office-helper/openai"
+	"office-helper/examples/openai"
 )
 
 var (
