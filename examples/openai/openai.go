@@ -1,43 +1,37 @@
-package openai
+package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/sashabaranov/go-openai"
 )
 
 var (
-	apiKey = "sk-bL635gjwMN0Ft5VFdLhwPPAo3CMr4Rd0ncSQc19C59O0VuNT"
+	apiKey = "sk-83UzhDduYZygHMtlCC2TTsi4gjbUI90tjsEUO35kxt2XTpFI"
 	url    = "https://poloai.top/v1"
 )
 
-type Chat struct {
-	client *openai.Client
-}
+func main() {
+	config := openai.DefaultConfig(apiKey)
+	config.BaseURL = url
 
-func NewChat() *Chat {
-	cfg := openai.DefaultConfig(apiKey)
-	cfg.BaseURL = url
+	client := openai.NewClientWithConfig(config)
 
-	client := openai.NewClientWithConfig(cfg)
-	return &Chat{client: client}
-}
-
-func (c *Chat) RoleMessage(ctx context.Context, prompts string) (string, error) {
-	rsp, err := c.client.CreateChatCompletion(
-		ctx,
+	rsp, err := client.CreateChatCompletion(
+		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
+			Model: openai.GPT4,
 			Messages: []openai.ChatCompletionMessage{
 				{
-					Role:    openai.ChatMessageRoleSystem,
-					Content: prompts,
+					Role:    openai.ChatMessageRoleUser,
+					Content: "hello world",
 				},
 			},
 		},
 	)
-
 	if err != nil {
-		return "", err
+		panic(err)
 	}
-	return rsp.Choices[0].Message.Content, nil
+	fmt.Println(rsp.Choices[0].Message.Content)
+
 }

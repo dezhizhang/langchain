@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	gitee.com/dn-jinmin/claude v1.0.2 // indirect
 	github.com/AssemblyAI/assemblyai-go-sdk v1.3.0 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.2.0 // indirect

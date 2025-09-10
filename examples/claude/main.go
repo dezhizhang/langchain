@@ -8,7 +8,7 @@ import (
 
 var (
 	apiKey = "sk-UASfaZ1vN3ookOlmQaqnMUPJDPV6VXEjnkOPW0sWgYPmSlL6"
-	url    = "https://poloai.top/v1"
+	url    = "https://poloai.top"
 )
 
 func main() {
