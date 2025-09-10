@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket 聊天窗口</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            width: 400px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            background: #fff;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .message.user {
+            background-color: #007bff;
+            color: #fff;
+            align-self: flex-end;
+        }
+        .message.bot {
+            background-color: #e5e5ea;
+            color: #000;
+            align-self: flex-start;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+        .chat-input input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .chat-input button {
+            border: none;
+            padding: 0 20px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .chat-input input:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div id="messages" class="chat-messages"></div>
+    <div class="chat-input">
+        <input type="text" id="inputMsg" placeholder="输入消息..." />
+        <button onclick="sendMessage()">发送</button>
+    </div>
+</div>
+
+<script>
+    const ws = new WebSocket("ws://localhost:8080/ws"); // 替换为你的 WebSocket 后端地址
+
+    const messagesDiv = document.getElementById("messages");
+    const inputMsg = document.getElementById("inputMsg");
+
+    ws.onopen = () => {
+        appendMessage("系统", "连接已建立", "bot");
+    };
+
+    ws.onmessage = (event) => {
+        appendMessage("AI", event.data, "bot");
+    };
+
+    ws.onclose = () => {
+        appendMessage("系统", "连接已关闭", "bot");
+    };
+
+    ws.onerror = (err) => {
+        appendMessage("系统", "连接出错: " + err, "bot");
+    };
+
+    function appendMessage(sender, text, type) {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message", type);
+        msgDiv.textContent = text;
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function sendMessage() {
+        const msg = inputMsg.value.trim();
+        if (!msg) return;
+        appendMessage("你", msg, "user");
+        ws.send(msg);
+        inputMsg.value = "";
+        inputMsg.focus();
+    }
+
+    // 回车发送
+    inputMsg.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendMessage();
+    });
+</script>
+
+</body>
+</html>
