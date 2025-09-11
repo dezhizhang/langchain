@@ -32,10 +32,12 @@ func server(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			break
 		}
-		if err := c.WriteMessage(mt, []byte(s)); err != nil {
+		if err = c.WriteMessage(mt, []byte(s)); err != nil {
 			break
 		}
+
 	}
+
 }
 
 func main() {
@@ -44,5 +46,4 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 }
