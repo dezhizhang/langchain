@@ -14,6 +14,7 @@ var (
 )
 
 func main() {
+
 	ctx := context.Background()
 	llm, err := openai.New(openai.WithToken(apiKey), openai.WithBaseURL(url))
 	if err != nil {
@@ -21,52 +22,20 @@ func main() {
 	}
 
 	template := prompts.NewPromptTemplate(
-		"员工:{{.name}}\n: {{.dep}}\n介绍: {{.introduce}}",
-		[]string{"name", "dep", "introduce"},
+		"请你为{{.dep}}部门新入职员工{{.name}} 设计一个自我介绍",
+		[]string{"dep", "name"},
 	)
 
-	example := []map[string]string{
-		{
-			"name":      "tom",
-			"dep":       "前端开发",
-			"introduce": "大家好，我是lili 具有5年前端开发经验，很高兴加入",
-		},
-		{
-			"name":      "数擎Ai",
-			"dep":       "前端开发",
-			"introduce": "大家好，我是数擎Ai 具有10年前端开发经验，很高兴加入,希大家多多关照",
-		},
+	staff := map[string]any{
+		"name": "数擎Ai",
+		"dep":  "产品研发",
 	}
 
-	p, err := prompts.NewFewShotPrompt(
-		template,
-		example,
-		nil,
-		"请根据如下示例参考输出用户的个人介绍",
-		"请你为:{{.sdep}}部门新入职员工:{{.sname}}设计一个自我介绍",
-		[]string{"prefixId", "sdep", "sname"},
-		map[string]interface{}{
-			//"prefixId":  func() string { return "id" },
-			//"prefixCtx": "测试",
-		},
-		"\n",
-		prompts.TemplateFormatGoTemplate,
-		false,
-	)
-
+	prompt, err := template.FormatPrompt(staff)
 	if err != nil {
 		panic(err)
 	}
-
-	v, err := p.FormatPrompt(map[string]any{
-		"sname": "数擎Ai",
-		"sdep":  "前端开发",
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	text, err := llms.GenerateFromSinglePrompt(ctx, llm, v.String())
+	text, err := llms.GenerateFromSinglePrompt(ctx, llm, prompt.String())
 	if err != nil {
 		panic(err)
 	}
