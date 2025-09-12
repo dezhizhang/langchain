@@ -18,21 +18,20 @@ var (
 
 func main() {
 	ctx := context.Background()
-	llm, err := openai.New(openai.WithToken(apiKey), openai.WithBaseURL(url), openai.WithModel("gpt-4o-mini"))
+	llm, err := openai.New(openai.WithToken(apiKey), openai.WithBaseURL(url))
 	if err != nil {
 		panic(err)
 	}
 
-	// 生成提示词模板
-	prompt := prompts.NewPromptTemplate(template+format, templateInputValue)
-	// 创建链
-	chain := chains.NewLLMChain(llm, prompt)
-	res, err := chains.Call(ctx, chain, map[string]any{
-		"name": "数擎AI",
-		"dep":  "前端开发",
+	promptTemplate := prompts.NewPromptTemplate(template, templateInputValue)
+	// 生成链
+	chain := chains.NewLLMChain(llm, promptTemplate)
+	call, err := chains.Call(ctx, chain, map[string]any{
+		"name": "数擎Ai",
+		"dep":  "产品研发",
 	})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(res)
+	fmt.Println(call)
 }

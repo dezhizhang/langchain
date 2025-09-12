@@ -17,16 +17,11 @@ var (
 )
 
 func main() {
-	ctx := context.Background()
-	llm, err := openai.New(openai.WithToken(apiKey), openai.WithBaseURL(url))
-	if err != nil {
-		panic(err)
-	}
 
 	output := outputparser.NewStructured([]outputparser.ResponseSchema{
 		{
 			Name:        "content",
-			Description: "介绍内容",
+			Description: "介始内容",
 		},
 		{
 			Name:        "reason",
@@ -35,30 +30,32 @@ func main() {
 	})
 
 	instructions := output.GetFormatInstructions()
-	fmt.Println("output instructions:", instructions)
-
-	promptStr := prompts.NewPromptTemplate(template+"\n"+instructions, templateInputValue)
+	promptTemplate := prompts.NewPromptTemplate(template+"\n"+instructions, templateInputValue)
 
 	staff := map[string]any{
 		"name": "数擎Ai",
-		"dep":  "前端开发",
+		"dep":  "大模型开发",
 	}
 
-	v, err := promptStr.FormatPrompt(staff)
+	prompt, err := promptTemplate.FormatPrompt(staff)
 	if err != nil {
 		panic(err)
 	}
 
-	text, err := llms.GenerateFromSinglePrompt(ctx, llm, v.String())
+	ctx := context.Background()
+	llm, err := openai.New(openai.WithToken(apiKey), openai.WithBaseURL(url))
 	if err != nil {
 		panic(err)
 	}
 
+	text, err := llms.GenerateFromSinglePrompt(ctx, llm, prompt.String())
+	if err != nil {
+		panic(err)
+	}
 	data, err := output.Parse(text)
 	if err != nil {
 		panic(err)
 	}
-
 	fmt.Println(data)
 
 }

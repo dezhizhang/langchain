@@ -21,17 +21,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	c := chains.NewConversation(llm, memory.NewConversationBuffer())
-	rsp, err := chains.Run(ctx, c, "你好，我是数擎科技有限公司")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(rsp)
 
-	run, err := chains.Run(ctx, c, "我是谁，叫什么")
+	c := chains.NewConversation(llm, memory.NewConversationBuffer())
+	_, err = chains.Run(ctx, c, "你好，我是贵州数擎科技有限公司")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(run)
+
+	s, err := chains.Run(ctx, c, "我是谁，叫什么")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(s)
 
 }
