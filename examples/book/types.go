@@ -8,5 +8,5 @@ type Section struct {
 type BodyCount struct {
 	Content     int    `json:"content"`
 	LastContent string `json:"lastContent"`
-	Count       string `json:"count"`
+	Count       int    `json:"count"`
 }
