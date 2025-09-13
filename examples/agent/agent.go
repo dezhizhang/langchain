@@ -8,6 +8,7 @@ import (
 	"github.com/tmc/langchaingo/llms/openai"
 	"github.com/tmc/langchaingo/tools"
 	"github.com/tmc/langchaingo/tools/serpapi"
+	"log"
 )
 
 var (
@@ -18,16 +19,17 @@ var (
 
 func handlePanic(err error) {
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
 func main() {
 
 	ctx := context.Background()
-	llm, _ := openai.New(openai.WithToken(apiKey), openai.WithBaseURL(url))
+	llm, err := openai.New(openai.WithToken(apiKey), openai.WithBaseURL(url))
+	handlePanic(err)
 
-	// 定义好工具
+	// 定义工具
 	tool, err := serpapi.New(serpapi.WithAPIKey(serpapiKey))
 	handlePanic(err)
 
@@ -36,9 +38,9 @@ func main() {
 	t := []tools.Tool{tool, calculator}
 
 	executor := agents.NewExecutor(agents.NewOneShotAgent(llm, t))
-	run, err := chains.Run(ctx, executor, "数擎科技是干什么的")
-	if err != nil {
-		panic(err)
-	}
+	run, err := chains.Run(ctx, executor, "贵州数擎科技有限公司")
+	handlePanic(err)
+
 	fmt.Println(run)
+
 }
